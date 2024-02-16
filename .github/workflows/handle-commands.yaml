@@ -23,6 +23,8 @@ jobs:
     permissions:
       # To update the repo.
       contents: write
+      # To reply to comments.
+      issues: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
