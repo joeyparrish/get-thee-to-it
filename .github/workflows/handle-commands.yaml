@@ -8,6 +8,7 @@ on:
 
 jobs:
   handle_command:
+    name: Handle Command
     # Only runs on issues that contain '/bot' comments, but not comments
     # made by the bot itself.
     # Note that contains() is not case sensitive.
