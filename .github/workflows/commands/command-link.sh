@@ -45,9 +45,9 @@ url="${BOT_ARGUMENTS[2]}"
   set -e
 
   mkdir -p "$GITHUB_WORKSPACE/$short_name/"
-  cat "$GITHUB_WORKSPACE/template.html" | sed -e "s/{{url}}/$url/" > "$GITHUB_WORKSPACE/$short_name/index.html"
+  cat "$GITHUB_WORKSPACE/template.html" | sed -e "s'{{url}}'$url'" > "$GITHUB_WORKSPACE/$short_name/index.html"
+
   git add "$GITHUB_WORKSPACE/$short_name/index.html"
-  false
   git commit -m "Update $short_name"
   git push
 ); rv=$?
