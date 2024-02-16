@@ -1,4 +1,4 @@
-# get.thee.to.it
+# [get.thee.to.it](https://get.thee.to.it/)
 
 Experimental link shortener based on GitHub Pages and GitHub Actions.
 
