@@ -43,12 +43,15 @@ url="${BOT_ARGUMENTS[2]}"
 if [[ -e "$GITHUB_WORKSPACE/$short_name/index.html" ]]; then
   reply "Short link \`$short_name\` not found."
 else
-  if (
+  # See https://unix.stackexchange.com/a/296536
+  (
     set -e
     git rm -rf "$GITHUB_WORKSPACE/$short_name/"
     git commit -m "Delete $short_name"
     git push
-  ); then
+  ); rv=$?
+
+  if [[ $rv == 0 ]]; then
     reply "Short link \`$short_name\` deleted."
   else
     reply "Failed to delete short link \`$short_name\`\!"

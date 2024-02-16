@@ -37,21 +37,22 @@ if [[ ${#BOT_ARGUMENTS[@]} -ne 3 || ${BOT_ARGUMENTS[1]} != "to" ]]; then
   exit 0
 fi
 
-set -x
-
 short_name="${BOT_ARGUMENTS[0]}"
 url="${BOT_ARGUMENTS[2]}"
 
-if (
+# See https://unix.stackexchange.com/a/296536
+(
   set -e
-  set -x
+
   mkdir -p "$GITHUB_WORKSPACE/$short_name/"
   cat "$GITHUB_WORKSPACE/template.html" | sed -e "s/{{url}}/$url/" > "$GITHUB_WORKSPACE/$short_name/index.html"
   git add "$GITHUB_WORKSPACE/$short_name/index.html"
   false
   git commit -m "Update $short_name"
   git push
-); then
+); rv=$?
+
+if [[ $rv == 0 ]]; then
   reply "Short link \`$short_name\` created."
 else
   reply "Failed to create short link \`$short_name\`\!"
