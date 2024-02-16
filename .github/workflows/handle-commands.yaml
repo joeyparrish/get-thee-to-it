@@ -1,0 +1,32 @@
+# Forked from https://github.com/shaka-project/shaka-player/blob/main/.github/workflows/talk-to-shaka-bot.yaml
+name: Handle Commands
+
+# Runs when issue comments are created.
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  handle_command:
+    # Only runs on issues that contain '/bot' comments, but not comments
+    # made by the bot itself.
+    # Note that contains() is not case sensitive.
+    if: ${{ !github.event.issue.pull_request && contains(github.event.comment.body, '/bot') && github.event.comment.user.login != 'github-actions' }}
+    runs-on: [ubuntu-latest]
+    env:
+      # This token must have "repo" scope, "org:read" scope, and write access.
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      THIS_REPO: ${{ github.repository }}
+      COMMENTER: ${{ github.event.comment.user.login }}
+      ISSUE_NUMBER: ${{ github.event.issue.number }}
+      COMMENT_BODY: ${{ github.event.comment.body }}
+    permissions:
+      # To update the repo.
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Handle command
+        shell: bash
+        run: .github/workflows/commands/main.sh
