@@ -46,6 +46,10 @@ else
   # See https://unix.stackexchange.com/a/296536
   (
     set -e
+
+    git config --global user.email "actions-bot@github.com"
+    git config --global user.name "GitHub Actions [bot]"
+
     git rm -rf "$GITHUB_WORKSPACE/$short_name/"
     git commit -m "Delete $short_name"
     git push

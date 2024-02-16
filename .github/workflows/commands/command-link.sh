@@ -47,6 +47,9 @@ url="${BOT_ARGUMENTS[2]}"
   mkdir -p "$GITHUB_WORKSPACE/$short_name/"
   cat "$GITHUB_WORKSPACE/template.html" | sed -e "s'{{url}}'$url'" > "$GITHUB_WORKSPACE/$short_name/index.html"
 
+  git config --global user.email "actions-bot@github.com"
+  git config --global user.name "GitHub Actions [bot]"
+
   git add "$GITHUB_WORKSPACE/$short_name/index.html"
   git commit -m "Update $short_name"
   git push
