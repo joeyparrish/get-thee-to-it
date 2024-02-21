@@ -43,11 +43,13 @@ if [[ "$BOT_COMMAND" == "" ]]; then
   exit 0
 fi
 
-echo "Issue $ISSUE_NUMBER, detected command $BOT_COMMAND"
+echo "Issue $ISSUE_NUMBER"
+echo "Detected command \"$BOT_COMMAND\""
+echo "Detected arguments \"$BOT_ARGUMENTS\""
 
 case "$BOT_COMMAND" in
   help) . command-help.sh ;;
   link) . command-link.sh ;;
   delete) . command-delete.sh ;;
-  *) echo "Unknown command!" ;;
+  *) echo "Unknown command" ;;
 esac

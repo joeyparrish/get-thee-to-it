@@ -65,20 +65,45 @@ function start_workflow() {
   gh workflow run "$WORKFLOW" -R "$THIS_REPO" "${GH_ARGS[@]}"
 }
 
+# Simple alias for converting a stream of text to lowercase.
+function tolower() {
+  tr '[:upper:]' '[:lower:]'
+}
+
 # Outputs to global variables BOT_COMMAND and BOT_ARGUMENTS (array).
 function parse_command() {
-  # Tokenize the comment by whitespace.
-  local TOKENS=( $COMMENT_BODY )
+  echo "Parsing comment.  Body: \"$COMMENT_BODY\""
 
-  local INDEX
-  for (( INDEX=0; INDEX < ${#TOKENS[@]}; INDEX++ )); do
-    if [[ "${TOKENS[INDEX]}" == "/bot" ]]; then
-      BOT_COMMAND="${TOKENS[INDEX+1]}"
-      # A slice of all tokens starting with INDEX+2.
-      BOT_ARGUMENTS=( "${TOKENS[@]:INDEX+2}" )
-      return 0
-    fi
-  done
+  # Read each line one at a time.  Tokens from one line won't affect another.
+  local COMMENT_LINE
+  while read COMMENT_LINE; do
+    echo "Parsing comment.  Line: \"$COMMENT_LINE\""
+
+    # Tokenize the line by whitespace.
+    local TOKENS=( $COMMENT_LINE )
+
+    local INDEX
+    for (( INDEX=0; INDEX < ${#TOKENS[@]}; INDEX++ )); do
+      if [[ "${TOKENS[INDEX]}" == "@shaka-bot" ]]; then
+        # The next word is the command.
+        BOT_COMMAND=$(echo "${TOKENS[INDEX+1]}" | tolower)
+
+        # Unless it's please, then it's the word after that.
+        if [[ "$BOT_COMMAND" == "please" ]]; then
+          INDEX=$((INDEX + 1))
+          BOT_COMMAND=$(echo "${TOKENS[INDEX+1]}" | tolower)
+        fi
+
+        # A slice of all tokens starting with index INDEX+2.
+        BOT_ARGUMENTS=( "${TOKENS[@]:INDEX+2}" )
+        return 0
+      fi
+    done
+  done < <(echo "$COMMENT_BODY" | tr -d '\r')
+  # The line above pipes COMMENT_BODY, without \r characters, into the loop.
+  # It is important to maintain the loop in the main shell, not a subshell, so
+  # that variables it writes to (BOT_COMMAND and BOT_ARGUMENTS) affect the
+  # caller.
 
   return 1
 }
