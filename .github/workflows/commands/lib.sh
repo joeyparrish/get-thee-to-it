@@ -72,10 +72,10 @@ function parse_command() {
 
   local INDEX
   for (( INDEX=0; INDEX < ${#TOKENS[@]}; INDEX++ )); do
-    if [[ "${TOKENS[i]}" == "/bot" ]]; then
-      BOT_COMMAND="${TOKENS[i+1]}"
-      # A slice of all tokens starting with index i+2.
-      BOT_ARGUMENTS=( "${TOKENS[@]:i+2}" )
+    if [[ "${TOKENS[INDEX]}" == "/bot" ]]; then
+      BOT_COMMAND="${TOKENS[INDEX+1]}"
+      # A slice of all tokens starting with INDEX+2.
+      BOT_ARGUMENTS=( "${TOKENS[@]:INDEX+2}" )
       return 0
     fi
   done
