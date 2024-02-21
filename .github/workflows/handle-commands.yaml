@@ -1,6 +1,9 @@
 # Forked from https://github.com/shaka-project/shaka-player/blob/main/.github/workflows/talk-to-shaka-bot.yaml
 name: Handle Commands
 
+# Only one run of this workflow is allowed at a time.
+concurrency: command
+
 # Runs when issue comments are created.
 on:
   issue_comment:
