@@ -84,7 +84,7 @@ function parse_command() {
 
     local INDEX
     for (( INDEX=0; INDEX < ${#TOKENS[@]}; INDEX++ )); do
-      if [[ "${TOKENS[INDEX]}" == "@shaka-bot" ]]; then
+      if [[ "${TOKENS[INDEX]}" == "/bot" ]]; then
         # The next word is the command.
         BOT_COMMAND=$(echo "${TOKENS[INDEX+1]}" | tolower)
 
